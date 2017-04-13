@@ -1,5 +1,6 @@
 package EmployeeSite;
 
+import BOVSite.CarView;
 import ManufactureSite.*;
 import CarTalk.CarTalkMain;
 import jIntro.IntroWindow;
@@ -96,8 +97,9 @@ public class TEmpMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        new ToyCarView().setVisible(true);
-        this.dispose();// TODO add your handling code here:
+        CarView cv = new CarView("Toyota");
+        cv.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed

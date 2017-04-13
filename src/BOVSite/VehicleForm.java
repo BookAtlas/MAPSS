@@ -31,10 +31,10 @@ public class VehicleForm extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        chevroletButton = new javax.swing.JButton();
+        dodgeButton = new javax.swing.JButton();
+        fordButton = new javax.swing.JButton();
+        toyotaButon = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -48,18 +48,38 @@ public class VehicleForm extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Select Manufacture");
 
-        jButton2.setText("Chevrolet");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        chevroletButton.setText("Chevrolet");
+        chevroletButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                chevroletButtonMouseClicked(evt);
+            }
+        });
+        chevroletButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                chevroletButtonActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Dodge");
+        dodgeButton.setText("Dodge");
+        dodgeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dodgeButtonActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Ford");
+        fordButton.setText("Ford");
+        fordButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fordButtonActionPerformed(evt);
+            }
+        });
 
-        jButton5.setText("Toyota");
+        toyotaButon.setText("Toyota");
+        toyotaButon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toyotaButonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -68,12 +88,12 @@ public class VehicleForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(67, 67, 67)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3)
-                    .addComponent(jButton2))
+                    .addComponent(dodgeButton)
+                    .addComponent(chevroletButton))
                 .addGap(88, 88, 88)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(fordButton)
+                    .addComponent(toyotaButon))
                 .addContainerGap(99, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -93,32 +113,55 @@ public class VehicleForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(24, 24, 24)
-                        .addComponent(jButton2)
+                        .addComponent(chevroletButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton3)
+                        .addComponent(dodgeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 142, Short.MAX_VALUE)
                         .addComponent(jButton1)
                         .addGap(21, 21, 21))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(28, 28, 28)
-                        .addComponent(jButton4)
+                        .addComponent(fordButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton5)
+                        .addComponent(toyotaButon)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        new CarView().setVisible(true);
+    private void chevroletButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chevroletButtonActionPerformed
+        CarView cv = new CarView("Chevrolet");
+        cv.setVisible(true);
         this.dispose();// TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_chevroletButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         new DMainMenu().setVisible(true);
         this.dispose();// TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void chevroletButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chevroletButtonMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chevroletButtonMouseClicked
+
+    private void fordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fordButtonActionPerformed
+        CarView cv = new CarView("Ford");
+        cv.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_fordButtonActionPerformed
+
+    private void dodgeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dodgeButtonActionPerformed
+        CarView cv = new CarView("Dodge");
+        cv.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_dodgeButtonActionPerformed
+
+    private void toyotaButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toyotaButonActionPerformed
+        CarView cv = new CarView("Toyota");
+        cv.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_toyotaButonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -156,11 +199,11 @@ public class VehicleForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton chevroletButton;
+    private javax.swing.JButton dodgeButton;
+    private javax.swing.JButton fordButton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton toyotaButon;
     // End of variables declaration//GEN-END:variables
 }

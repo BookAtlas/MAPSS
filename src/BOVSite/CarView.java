@@ -5,17 +5,86 @@
  */
 package BOVSite;
 
+import jIntro.unameErr;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Tolise
  */
 public class CarView extends javax.swing.JFrame {
+    
+    private String company = "";
 
     /**
      * Creates new form CarView
      */
     public CarView() {
         initComponents();
+    }
+    
+    public CarView(String comp){
+        setCompany(comp);
+        initComponents();
+    }
+    
+    public String getCompany(){
+        return this.company;
+    }
+    
+    public void setCompany(String val){
+        this.company = val;
+    }
+    
+    private Object[][] getData(){
+        List<String[]> res = new ArrayList<String[]>();
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:bov.db");
+            c.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+            stmt = c.createStatement();
+            String comp = company;
+            String q = "";
+            if(comp == null){
+                q = "SELECT * FROM vehicles";
+            } else {
+                q = "SELECT * FROM vehicles WHERE make='" + comp + "';";
+            }
+            System.out.println(q);
+            ResultSet rs = stmt.executeQuery(q);
+            while(rs.next()){
+                String[] row = {"", "", "", "", "", ""};
+                row[0] = String.valueOf(rs.getInt("year"));
+                row[1] = rs.getString("make");
+                row[2] = rs.getString("model");
+                row[3] = rs.getString("gas");
+                row[4] = rs.getString("color");
+                res.add(row);
+            }
+            rs.close();
+            stmt.close();
+            c.commit();
+            c.close();
+            Object[][] dArray = new Object[res.size()][5];
+            for (int i = 0; i < res.size(); i++){
+                for(int e = 0; e < 5; e ++){
+                    dArray[i][e] = res.get(i)[e];
+                }
+            }
+            return dArray;
+        } catch ( Exception e ) {
+          System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+          System.exit(0);
+          return null;
+        }
     }
 
     /**
@@ -27,146 +96,126 @@ public class CarView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
-        jButton8 = new javax.swing.JButton();
+        titleStringLabel = new javax.swing.JLabel();
+        backButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        carTable = new javax.swing.JTable();
+        editItemButton = new javax.swing.JButton();
+        deleteItemButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("List of Vehicles from Chevrolet");
+        titleStringLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        titleStringLabel.setText("List of Vehicles for Automotive Company");
+        titleStringLabel.setAlignmentX(0.5F);
 
-        jLabel2.setText("Vehicle 1");
-
-        jLabel3.setText("Vehicle 1 options and so on from database");
-
-        jButton1.setText("Edit Info");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                backButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Add Notes");
+        Object[][] rows;
+        if(this.company != null){
+            rows = getData();
+        } else {
+            rows = new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            };
+        }
+        carTable.setModel(new javax.swing.table.DefaultTableModel(
+            rows,
+            new String [] {
+                "Year", "Make", "Model", "Feul Economy", "Color"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, false
+            };
 
-        jLabel4.setText("Note: loop print cars to screen and there info");
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
-        jButton3.setText("Delete Info");
-
-        jLabel5.setText("Vehicle 2");
-
-        jLabel6.setText("Vehicle 2 options and so on from database");
-
-        jButton4.setText("Edit Info");
-
-        jButton5.setText("Add Notes");
-
-        jButton6.setText("Delete Info");
-
-        jLabel7.setText("And so on");
-
-        jButton8.setText("Back");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
+        carTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(carTable);
+        if (carTable.getColumnModel().getColumnCount() > 0) {
+            carTable.getColumnModel().getColumn(0).setResizable(false);
+            carTable.getColumnModel().getColumn(1).setResizable(false);
+            carTable.getColumnModel().getColumn(2).setResizable(false);
+            carTable.getColumnModel().getColumn(3).setResizable(false);
+            carTable.getColumnModel().getColumn(4).setResizable(false);
+        }
+
+        editItemButton.setText("Edit Item");
+        editItemButton.setMaximumSize(new java.awt.Dimension(99, 25));
+        editItemButton.setMinimumSize(new java.awt.Dimension(99, 25));
+        editItemButton.setPreferredSize(new java.awt.Dimension(99, 25));
+        editItemButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editItemButtonActionPerformed(evt);
+            }
+        });
+
+        deleteItemButton.setText("Delete Item");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(76, 76, 76))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel7)
-                        .addGap(231, 231, 231))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton8)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(56, 56, 56)
-                                .addComponent(jButton1)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton2)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton3))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(48, 48, 48)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton5)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jButton6)))))
-                        .addGap(48, 48, 48))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(editItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(backButton, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(deleteItemButton, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addComponent(titleStringLabel))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(21, 21, 21)
-                .addComponent(jLabel4)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
+                .addComponent(titleStringLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(editItemButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteItemButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(backButton))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         new VehicleForm().setVisible(true);
         this.dispose();// TODO add your handling code here:
-    }//GEN-LAST:event_jButton8ActionPerformed
+    }//GEN-LAST:event_backButtonActionPerformed
+
+    private void editItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editItemButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editItemButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -204,19 +253,11 @@ public class CarView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
+    private javax.swing.JButton backButton;
+    private javax.swing.JTable carTable;
+    private javax.swing.JButton deleteItemButton;
+    private javax.swing.JButton editItemButton;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel titleStringLabel;
     // End of variables declaration//GEN-END:variables
 }
