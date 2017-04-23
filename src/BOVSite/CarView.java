@@ -419,7 +419,7 @@ public class CarView extends javax.swing.JFrame {
         try{
             Integer.parseInt(year);
         } catch (NumberFormatException e){
-            JOptionPane.showMessageDialog(null, "Invalid year!");
+            JOptionPane.showMessageDialog(editDialog, "Invalid year!");
             return;
         }
         make = makeField.getText();
@@ -428,15 +428,15 @@ public class CarView extends javax.swing.JFrame {
         try{
             Integer.parseInt(fuel);
         } catch (NumberFormatException e){
-            JOptionPane.showMessageDialog(null, "Invalid Fuel Economy!");
+            JOptionPane.showMessageDialog(editDialog, "Invalid Fuel Economy!");
             return;
         }
         color = String.valueOf(colorCombo.getSelectedItem());
         price = msrpField.getText();
         try{
-            Integer.parseInt(fuel);
+            Integer.parseInt(price);
         } catch (NumberFormatException e){
-            JOptionPane.showMessageDialog(null, "Invalid MSRP!");
+            JOptionPane.showMessageDialog(editDialog, "Invalid MSRP!");
             return;
         }
         Car newCar = new Car(id, year, make, model, fuel,
