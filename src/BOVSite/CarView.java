@@ -5,6 +5,7 @@
  */
 package BOVSite;
 
+import MapssUtils.Car;
 import jIntro.unameErr;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,6 +21,7 @@ import java.util.List;
 public class CarView extends javax.swing.JFrame {
     
     private String company = "";
+    private List<Car> cars;
 
     /**
      * Creates new form CarView
@@ -41,8 +43,8 @@ public class CarView extends javax.swing.JFrame {
         this.company = val;
     }
     
-    private Object[][] getData(){
-        List<String[]> res = new ArrayList<String[]>();
+    private void buildList(){
+        cars = new ArrayList<Car>();
         Connection c = null;
         Statement stmt = null;
         try {
@@ -61,30 +63,36 @@ public class CarView extends javax.swing.JFrame {
             System.out.println(q);
             ResultSet rs = stmt.executeQuery(q);
             while(rs.next()){
-                String[] row = {"", "", "", "", "", ""};
-                row[0] = String.valueOf(rs.getInt("year"));
-                row[1] = rs.getString("make");
-                row[2] = rs.getString("model");
-                row[3] = rs.getString("gas");
-                row[4] = rs.getString("color");
-                res.add(row);
+                Car car = new Car(rs.getInt("id"),
+                rs.getString("year"),
+                rs.getString("make"),
+                rs.getString("model"),
+                rs.getString("gas"),
+                Car.CarColor.valueOf(rs.getString("color")),
+                String.valueOf(rs.getInt("price")));
+                cars.add(car);
             }
             rs.close();
             stmt.close();
             c.commit();
             c.close();
-            Object[][] dArray = new Object[res.size()][5];
-            for (int i = 0; i < res.size(); i++){
-                for(int e = 0; e < 5; e ++){
-                    dArray[i][e] = res.get(i)[e];
-                }
-            }
-            return dArray;
         } catch ( Exception e ) {
           System.err.println( e.getClass().getName() + ": " + e.getMessage() );
           System.exit(0);
-          return null;
         }
+    }
+    private Object[][] getData(){
+        this.buildList();
+        Object[][] dArray = new Object[cars.size()][6];
+        for (int i = 0; i < cars.size(); i++){
+            dArray[i][0] = cars.get(i).getYear();
+            dArray[i][1] = cars.get(i).getMake();
+            dArray[i][2] = cars.get(i).getModel();
+            dArray[i][3] = cars.get(i).getFuel();
+            dArray[i][4] = cars.get(i).getColor();
+            dArray[i][5] = cars.get(i).getPrice();
+        }
+        return dArray;
     }
 
     /**
@@ -116,33 +124,27 @@ public class CarView extends javax.swing.JFrame {
             }
         });
 
+        carTable.setAutoCreateRowSorter(true);
         Object[][] rows;
         if(this.company != null){
             rows = getData();
         } else {
             rows = new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             };
         }
         carTable.setModel(new javax.swing.table.DefaultTableModel(
             rows,
             new String [] {
-                "Year", "Make", "Model", "Feul Economy", "Color"
+                "Year", "Make", "Model", "Gas Mileage", "Color", "MSRP"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
             boolean[] canEdit = new boolean [] {
-                true, false, false, false, false
+                false, false, false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -150,13 +152,6 @@ public class CarView extends javax.swing.JFrame {
         });
         carTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(carTable);
-        if (carTable.getColumnModel().getColumnCount() > 0) {
-            carTable.getColumnModel().getColumn(0).setResizable(false);
-            carTable.getColumnModel().getColumn(1).setResizable(false);
-            carTable.getColumnModel().getColumn(2).setResizable(false);
-            carTable.getColumnModel().getColumn(3).setResizable(false);
-            carTable.getColumnModel().getColumn(4).setResizable(false);
-        }
 
         editItemButton.setText("Edit Item");
         editItemButton.setMaximumSize(new java.awt.Dimension(99, 25));
