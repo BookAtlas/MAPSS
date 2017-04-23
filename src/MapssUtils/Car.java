@@ -62,10 +62,10 @@ public class Car {
     }
     
     public String ins_or_update_stmt(){
-        return "INSERT OR REPLACE INTO vehicles(year,make,model,gas,color,price)"
+        return "INSERT OR REPLACE INTO vehicles(id,year,make,model,gas,color,price)"
                 + " VALUES (" + this.id + ", '" + this.year + "', '" +
                 this.make + "', '" + this.model + "', '" + this.fuel_economy +
-                "', " + this.color + ", " + this.price + ")";
+                "', '" + this.color + "', " + this.price + ");";
     }
     
     public String del_stmt(){
