@@ -14,7 +14,7 @@ public class Car {
         Silver;
     }
     
-    private double id;
+    private long id;
     private String year;
     private String make;
     private String model;
@@ -22,7 +22,7 @@ public class Car {
     private CarColor color;
     private String price;
     
-    public Car(double parId, String parYear, String parMake, String parModel,
+    public Car(long parId, String parYear, String parMake, String parModel,
             String parFuel, CarColor parColor, String parPrice) {
         this.id = parId;
         this.year = parYear;
@@ -33,7 +33,7 @@ public class Car {
         this.price = parPrice;
     }
     
-    public double getId(){
+    public long getId(){
         return id;
     }
     

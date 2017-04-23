@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -83,14 +84,15 @@ public class CarView extends javax.swing.JFrame {
     }
     private Object[][] getData(){
         this.buildList();
-        Object[][] dArray = new Object[cars.size()][6];
+        Object[][] dArray = new Object[cars.size()][7];
         for (int i = 0; i < cars.size(); i++){
-            dArray[i][0] = cars.get(i).getYear();
-            dArray[i][1] = cars.get(i).getMake();
-            dArray[i][2] = cars.get(i).getModel();
-            dArray[i][3] = cars.get(i).getFuel();
-            dArray[i][4] = cars.get(i).getColor();
-            dArray[i][5] = cars.get(i).getPrice();
+            dArray[i][0] = cars.get(i).getId();
+            dArray[i][1] = cars.get(i).getYear();
+            dArray[i][2] = cars.get(i).getMake();
+            dArray[i][3] = cars.get(i).getModel();
+            dArray[i][4] = cars.get(i).getFuel();
+            dArray[i][5] = cars.get(i).getColor();
+            dArray[i][6] = cars.get(i).getPrice();
         }
         return dArray;
     }
@@ -130,20 +132,20 @@ public class CarView extends javax.swing.JFrame {
             rows = getData();
         } else {
             rows = new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             };
         }
         carTable.setModel(new javax.swing.table.DefaultTableModel(
             rows,
             new String [] {
-                "Year", "Make", "Model", "Gas Mileage", "Color", "MSRP"
+                "ID", "Year", "Make", "Model", "Gas Mileage", "Color", "MSRP"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -152,6 +154,8 @@ public class CarView extends javax.swing.JFrame {
         });
         carTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(carTable);
+        TableColumnModel tcm = carTable.getColumnModel();
+        tcm.removeColumn(tcm.getColumn(0));
 
         editItemButton.setText("Edit Item");
         editItemButton.setMaximumSize(new java.awt.Dimension(99, 25));
